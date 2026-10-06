@@ -19,10 +19,6 @@ MyWindow::MyWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MyWindow)
     ui->tableWidgetClients->horizontalHeader()->setStretchLastSection(true);
     ui->tableWidgetClients->verticalHeader()->setVisible(false);
     ui->tableWidgetClients->horizontalHeader()->setStyleSheet("background-color: lightyellow");
-
-    /// Exemples d'utilisation (à supprimer)
-    setResultat(" ---- Bonjour !!! ---- ");
-    ajouteTupleTableUtilisateurs("wagner",10);
 }
 
 MyWindow::~MyWindow()
@@ -134,14 +130,56 @@ void MyWindow::on_pushButtonLogin_clicked()
   strcpy(nom,getNom());
   strcpy(motDePasse,getMotDePasse());
   nouvelUtilisateur = isNouveauChecked();
-
-  // TO DO
   printf("Clic sur bouton LOGIN : --%s--%s--%d--\n",nom,motDePasse,nouvelUtilisateur);
+  if (nouvelUtilisateur == 1)
+  {
+    if (estPresent(nom) > 0)
+    {
+      setResultat("Utilisateur deja existant !");
+      printf("Utilisateur deja existant !\n");
+    }
+    else
+    {
+      ajouteUtilisateur(nom, motDePasse);
+      setResultat("Nouvel utilisateur cree : bienvenue !");
+      printf("Nouvel utilisateur cree : bienvenue !\n");
+    }
+  }
+  else
+  {
+    int pos = estPresent(nom);
+    if (pos > 0)
+    {
+      if (verifieMotDePasse(pos, motDePasse) == 1)
+      {
+        setResultat("Re-bonjour cher utilisateur !");
+        printf("Re-bonjour cher utilisateur !\n");
+      }
+      else
+      {
+        setResultat("Mot de passe incorrect...");
+        printf("Mot de passe incorrect...\n");
+      }
+    }
+    else
+    {
+      setResultat("Utilisateur inconnu...");
+      printf("Utilisateur inconnu...\n");
+    }
+  }
+  
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void MyWindow::on_pushButtonAfficheFichier_clicked()
 {
-  // TO DO
-  printf("Clic sur bouton AFFICHER\n");
+  videTableUtilisateurs();
+
+  UTILISATEUR vecteur[100];
+  int n = listeUtilisateurs(vecteur);
+
+  for (int i = 0; i < n; i++)
+  {
+    ajouteTupleTableUtilisateurs(vecteur[i].nom, vecteur[i].hash);
+  }
 }
