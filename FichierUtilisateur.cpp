@@ -1,4 +1,7 @@
 #include "FichierUtilisateur.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstring>
 
 int estPresent(const char* nom)
 {
@@ -9,8 +12,12 @@ int estPresent(const char* nom)
 ////////////////////////////////////////////////////////////////////////////////////
 int hash(const char* motDePasse)
 {
-  // TO DO
-  return 0;
+  int somme = 0;
+  for (int i = 0; motDePasse[i] != '\0'; i++)
+  {
+    somme += (i + 1) * motDePasse[i];
+  }
+  return somme % 97;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
